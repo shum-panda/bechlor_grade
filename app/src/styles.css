@@ -1,0 +1,109 @@
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #1b1f24;
+  --muted: #5d6673;
+  --border: #dfe3e8;
+  --accent: #2f6fde;
+  --passed: #e8f5ec;
+  --failed: #fdecec;
+  --badge: #eef2fb;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151a;
+    --surface: #1b2027;
+    --text: #e6e9ee;
+    --muted: #9aa3af;
+    --border: #2d343e;
+    --accent: #6c9cf0;
+    --passed: #17291e;
+    --failed: #331b1b;
+    --badge: #23304a;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.shell { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 0;
+}
+.brand { font-size: 18px; }
+nav { display: flex; gap: 4px; }
+.tab {
+  border: 1px solid transparent;
+  background: none;
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font: inherit;
+  cursor: pointer;
+}
+.tab.active { background: var(--surface); border-color: var(--border); font-weight: 600; }
+.tab:disabled { color: var(--muted); cursor: default; }
+
+.page { display: grid; gap: 16px; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.stat, .card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.stat-label { color: var(--muted); font-size: 13px; }
+.stat-value { font-size: 28px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.stat-hint { color: var(--muted); font-size: 13px; }
+
+.card h2 { margin: 0 0 8px; font-size: 17px; }
+.muted { color: var(--muted); }
+
+.row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; }
+.field { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+
+input, select {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+.field input, .field select { width: 120px; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+th { font-size: 13px; color: var(--muted); font-weight: 500; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.passed td { background: var(--passed); }
+tr.failed td { background: var(--failed); }
+input.title { width: 100%; max-width: 320px; }
+.badge {
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--badge);
+  font-size: 12px;
+}
+.assign td { vertical-align: middle; }
+.link { background: none; border: none; color: var(--accent); cursor: pointer; font: inherit; margin-left: 8px; }
+
+.footer { color: var(--muted); font-size: 13px; padding: 24px 0; }

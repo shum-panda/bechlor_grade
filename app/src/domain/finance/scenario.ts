@@ -46,6 +46,11 @@ export interface Profile {
   firstDegree: boolean;
   /** Tuition and other study costs per year (fees, laptop, books, travel). */
   studyCostsYear: number;
+  /**
+   * Part of the study costs not covered by the BAföG Bedarfssatz (e.g. tuition
+   * at a private university) – basis for the Härtefreibetrag.
+   */
+  specialCostsYear?: number;
 }
 
 export interface Warning {
@@ -64,6 +69,8 @@ export interface ScenarioResult {
   netMonthly: number;
   bafoegMonthly: number;
   bafoegLossMonthly: number;
+  /** Extra allowance from § 23 Abs. 5 BAföG that is actually used. */
+  haertefreibetragMonthly: number;
   kvMonthly: number;
   availableMonthly: number;
   kindergeldMonthly: number;
@@ -288,8 +295,12 @@ export function calculate(rules: Rules, profile: Profile, sources: IncomeSource[
   const pauschale = Math.min(p.rate * bafoegEinkuenfte, p.cap);
   const anrechenbar = Math.max(0, bafoegEinkuenfte - pauschale - taxYear) / 12;
   const verguetungShare = bafoegGross > 0 ? bafoegVerguetungGross / bafoegGross : 0;
+  const regular = anrechenbar * (1 - verguetungShare);
+  // Härtefreibetrag: only for income counted with allowances (Abs. 5 deviates from Abs. 1, not from the full offset in Abs. 3).
+  const haerteMax = Math.min(rules.bafoeg.haertefreibetragMax, (profile.specialCostsYear ?? 0) / 12);
+  const haertefreibetragMonthly = Math.min(haerteMax, Math.max(0, regular - rules.bafoeg.freibetragSelbst));
   const anrechnung =
-    Math.max(0, anrechenbar * (1 - verguetungShare) - rules.bafoeg.freibetragSelbst) + anrechenbar * verguetungShare;
+    Math.max(0, regular - rules.bafoeg.freibetragSelbst - haertefreibetragMonthly) + anrechenbar * verguetungShare;
 
   const kvAdd = profile.bafoegBase > 0 && ageOk && !famVersichert && !hasFullSv ? rules.bafoeg.kvZuschlag + rules.bafoeg.pvZuschlag : 0;
   let bafoegMonthly = Math.max(0, profile.bafoegBase + kvAdd - anrechnung);
@@ -305,6 +316,24 @@ export function calculate(rules: Rules, profile: Profile, sources: IncomeSource[
     });
   }
 
+  if (profile.bafoegBase > 0 && haerteMax > 0) {
+    warnings.push(
+      haertefreibetragMonthly > 0
+        ? {
+            level: "warn",
+            title: "Härtefreibetrag beantragen",
+            text: `Deine besonderen Ausbildungskosten können zusätzlich ${Math.round(haertefreibetragMonthly)} €/Monat deines Einkommens anrechnungsfrei stellen (max. ${rules.bafoeg.haertefreibetragMax} €). Das gibt es nur auf Antrag vor Ende des Bewilligungszeitraums, mit Kostennachweisen. Das Amt entscheidet nach Ermessen und kann auf ein zumutbares Studiendarlehen verweisen.`,
+            source: rules.sources.bafoeg23_5,
+          }
+        : {
+            level: "info",
+            title: "Härtefreibetrag möglich",
+            text: `Mit deinen besonderen Ausbildungskosten könntest du bis zu ${Math.round(haerteMax)} €/Monat zusätzlich verdienen, ohne dass dein BAföG sinkt (Antrag nach § 23 Abs. 5 nötig).`,
+            source: rules.sources.bafoeg23_5,
+          },
+    );
+  }
+
   const kindergeldMonthly = profile.age < rules.kindergeldMaxAge ? rules.kindergeld : 0;
   const netYear = grossYear - svYear - taxYear;
   const netMonthly = netYear / 12;
@@ -317,6 +346,7 @@ export function calculate(rules: Rules, profile: Profile, sources: IncomeSource[
     netMonthly,
     bafoegMonthly,
     bafoegLossMonthly,
+    haertefreibetragMonthly,
     kvMonthly,
     availableMonthly: netMonthly + bafoegMonthly - kvMonthly,
     kindergeldMonthly,

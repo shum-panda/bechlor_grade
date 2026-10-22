@@ -77,6 +77,39 @@ describe("Pflichtpraktikum", () => {
   });
 });
 
+describe("Härtefreibetrag (§ 23 Abs. 5 BAföG)", () => {
+  const p = { ...profile, bafoegBase: 500 };
+
+  it("adds up to 390 €/month to the allowance for special costs", () => {
+    const r = calculate(R, { ...p, specialCostsYear: 2400 }, [job("werkstudent", 1000)]);
+    // 697,36 − 389 − 200 = 108,36
+    expect(r.haertefreibetragMonthly).toBe(200);
+    expect(r.bafoegMonthly).toBeCloseTo(637 - 108.36, 1);
+    expect(titles(r)).toContain("Härtefreibetrag beantragen");
+  });
+
+  it("uses only what is needed and is capped at 390 €/month", () => {
+    const r = calculate(R, { ...p, specialCostsYear: 12000 }, [job("werkstudent", 1000)]);
+    expect(r.haertefreibetragMonthly).toBeCloseTo(697.36 - 389, 1);
+    expect(r.bafoegMonthly).toBe(637);
+    const big = calculate(R, { ...p, specialCostsYear: 12000 }, [job("werkstudent", 1500)]);
+    expect(big.haertefreibetragMonthly).toBe(390);
+  });
+
+  it("raises the BAföG-safe gross", () => {
+    const sources = [job("werkstudent", 0)];
+    const without = bafoegSafeGross(R, { ...p, age: 22 }, sources, "werkstudent")!;
+    const withCosts = bafoegSafeGross(R, { ...p, age: 22, specialCostsYear: 4680 }, sources, "werkstudent")!;
+    expect(withCosts).toBeGreaterThan(without + 300);
+  });
+
+  it("does not apply to the full offset of Pflichtpraktikum pay", () => {
+    const r = calculate(R, { ...p, age: 22, specialCostsYear: 4680 }, [job("pflichtpraktikum", 1000, 6, 40)]);
+    expect(r.haertefreibetragMonthly).toBe(0);
+    expect(r.bafoegMonthly).toBeCloseTo(168.09, 1);
+  });
+});
+
 describe("Übungsleiter / Ehrenamt", () => {
   it("is tax-free and not counted for BAföG up to the pauschale", () => {
     const r = calculate(R, { ...profile, bafoegBase: 500 }, [job("uebungsleiter", 275), job("ehrenamt", 80)]);

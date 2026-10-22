@@ -64,6 +64,15 @@ export function FinancePage({ state, setState }: Props) {
             <span>Studienkosten (€/Jahr)</span>
             <input type="number" min={0} value={profile.studyCostsYear} onChange={(e) => setProfile({ studyCostsYear: Number(e.target.value) })} />
           </label>
+          <label className="field">
+            <span>davon besondere Kosten (€/Jahr)</span>
+            <input
+              type="number"
+              min={0}
+              value={profile.specialCostsYear ?? 0}
+              onChange={(e) => setProfile({ specialCostsYear: Number(e.target.value) })}
+            />
+          </label>
         </div>
         <div className="row checks">
           <label><input type="checkbox" checked={profile.hasChildren} onChange={(e) => setProfile({ hasChildren: e.target.checked })} /> Ich habe Kinder</label>
@@ -71,7 +80,8 @@ export function FinancePage({ state, setState }: Props) {
         </div>
         <p className="muted">
           BAföG: Trag den Betrag ein, den du ohne eigenes Einkommen bekommst. Ohne Krankenversicherungszuschlag, denn den rechnet die App selbst
-          dazu, wenn deine Familienversicherung wegfällt.
+          dazu, wenn deine Familienversicherung wegfällt. Besondere Kosten sind Ausbildungskosten, die der BAföG-Satz nicht abdeckt, z. B.
+          Studiengebühren einer privaten Hochschule. Mit ihnen kannst du einen Härtefreibetrag beantragen.
         </p>
       </section>
 
@@ -185,6 +195,9 @@ function ScenarioCard({
           <tr><td>Steuern</td><td className="num">{minus(r.taxYear / 12)}</td></tr>
           <tr><td>Netto</td><td className="num">{eur(r.netMonthly)}</td></tr>
           <tr><td>BAföG{r.bafoegLossMonthly > 0 ? ` (−${eur(r.bafoegLossMonthly)})` : ""}</td><td className="num">+{eur(r.bafoegMonthly)}</td></tr>
+          {r.haertefreibetragMonthly > 0 && (
+            <tr><td className="muted">davon gerettet durch Härtefreibetrag</td><td className="num muted">{eur(r.haertefreibetragMonthly)}</td></tr>
+          )}
           <tr><td>Krankenversicherung {r.famVersichert ? "(familienversichert)" : ""}</td><td className="num">{minus(r.kvMonthly)}</td></tr>
           <tr className="total"><td>Verfügbar pro Monat</td><td className="num">{eur(r.availableMonthly)}</td></tr>
           {r.kindergeldMonthly > 0 && (

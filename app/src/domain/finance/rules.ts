@@ -45,6 +45,8 @@ export interface Rules {
     pvZuschlag: number;
     /** § 23 Abs. 1 Nr. 1 BAföG – allowance on own income per month. */
     freibetragSelbst: number;
+    /** § 23 Abs. 5 BAföG – extra allowance for special training costs, on application. */
+    haertefreibetragMax: number;
     /** § 21 Abs. 2 BAföG – Sozialpauschalen. */
     pauschaleRvPflichtig: { rate: number; cap: number };
     pauschaleNichtRv: { rate: number; cap: number };
@@ -106,6 +108,7 @@ export const RULES_2026: Rules = {
     pvZuschlag: 35,
     // (603 − 1230/12) × (1 − 22,3 %) = 388,9 → aufgerundet, § 23 Abs. 6 BAföG
     freibetragSelbst: 389,
+    haertefreibetragMax: 390,
     pauschaleRvPflichtig: { rate: 0.223, cap: 17200 },
     pauschaleNichtRv: { rate: 0.165, cap: 10200 },
     pauschaleSonstige: { rate: 0.388, cap: 29500 },
@@ -116,6 +119,7 @@ export const RULES_2026: Rules = {
   sources: {
     bafoeg21: { label: "§ 21 BAföG (Einkommensbegriff, Sozialpauschalen)", url: "https://www.gesetze-im-internet.de/baf_g/__21.html" },
     bafoeg23: { label: "§ 23 BAföG (Freibeträge, Vollanrechnung Ausbildungsvergütung)", url: "https://www.gesetze-im-internet.de/baf_g/__23.html" },
+    bafoeg23_5: { label: "§ 23 Abs. 5 BAföG (Härtefreibetrag für besondere Ausbildungskosten)", url: "https://www.gesetze-im-internet.de/baf_g/__23.html" },
     bafoeg13: { label: "§ 13 BAföG (Bedarfssätze)", url: "https://www.gesetze-im-internet.de/baf_g/__13.html" },
     estg32a: { label: "§ 32a EStG (Einkommensteuertarif)", url: "https://www.gesetze-im-internet.de/estg/__32a.html" },
     estg3: { label: "§ 3 Nr. 26/26a EStG (Übungsleiter-/Ehrenamtspauschale)", url: "https://www.gesetze-im-internet.de/estg/__3.html" },

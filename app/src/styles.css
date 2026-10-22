@@ -86,7 +86,8 @@ input, select {
   border-radius: 6px;
   padding: 4px 8px;
 }
-.field input, .field select { width: 120px; }
+.field input { width: 120px; }
+.field select { min-width: 120px; max-width: 100%; }
 
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
@@ -107,3 +108,42 @@ input.title { width: 100%; max-width: 320px; }
 .link { background: none; border: none; color: var(--accent); cursor: pointer; font: inherit; margin-left: 8px; }
 
 .footer { color: var(--muted); font-size: 13px; padding: 24px 0; }
+
+/* Finance */
+:root {
+  --danger-bg: #fdecec; --danger-fg: #a3261f;
+  --warn-bg: #fff6e0; --warn-fg: #8a5a00;
+  --info-bg: #eef2fb; --info-fg: #2b4d8f;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --danger-bg: #3a1d1d; --danger-fg: #f2a19b;
+    --warn-bg: #352a12; --warn-fg: #f0c86a;
+    --info-bg: #1d2840; --info-fg: #a9c1f2;
+  }
+}
+.small { font-size: 13px; }
+.checks { gap: 16px; font-size: 14px; align-items: center; }
+.checks label { display: flex; gap: 6px; align-items: center; }
+.field .link { margin: 0; padding: 0; text-align: left; font-size: 13px; }
+.scenarios { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.scenario-head { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.scenario-head input.title { font-weight: 600; font-size: 16px; flex: 1; }
+.source { border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 12px; display: grid; gap: 8px; }
+.source > select { width: 100%; }
+.source .field input { width: 100px; }
+.source .row { margin: 0; gap: 12px; }
+.hint { margin: 0; font-size: 13px; color: var(--muted); }
+button.secondary {
+  font: inherit; color: var(--accent); background: var(--surface);
+  border: 1px dashed var(--border); border-radius: 8px; padding: 8px 12px; cursor: pointer; justify-self: start;
+}
+.result { margin-top: 12px; }
+.result td { padding: 4px 0; }
+.result tr.total td { font-weight: 650; border-top: 2px solid var(--text); border-bottom: none; font-size: 16px; }
+.warnings { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+.warnings li { border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; font-size: 14px; }
+.warnings li.danger { background: var(--danger-bg); color: var(--danger-fg); }
+.warnings li.warn { background: var(--warn-bg); color: var(--warn-fg); }
+.warnings li.info { background: var(--info-bg); color: var(--info-fg); }
+.warnings a { color: inherit; font-size: 12px; opacity: 0.85; }

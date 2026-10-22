@@ -86,7 +86,8 @@ describe("transcript parser", () => {
     expect(results.wp2?.title).toBe("Quantum Computing Fundamentals");
     expect(results.awe1?.title).toBe("Orientation Know-How in the Financial Sector");
     expect(results.englisch2?.grade).toBe(1.3);
-    expect(unmatched.map((r) => r.name)).toEqual(["Interdisciplinary Careers Orientation"]);
+    expect(results.fwp1?.title).toBe("Interdisciplinary Careers Orientation");
+    expect(unmatched).toHaveLength(0);
   });
 
   it("keeps a passed attempt over a later failed one", () => {
@@ -112,7 +113,7 @@ describe("grade calculation (same rules as the Excel)", () => {
     expect(s.weightDone).toBe(15);
     expect(s.passedCount).toBe(5);
     expect(s.failedCount).toBe(1);
-    expect(s.moduleCount).toBe(32);
+    expect(s.moduleCount).toBe(33);
   });
 
   it("computes the final grade as 75/15/10", () => {
@@ -120,7 +121,7 @@ describe("grade calculation (same rules as the Excel)", () => {
   });
 
   it("computes the average still needed in open modules", () => {
-    const s = { average: 2.0, weightDone: 50, weightTotal: 150, passedCount: 0, moduleCount: 32, failedCount: 0 };
+    const s = { average: 2.0, weightDone: 50, weightTotal: 150, passedCount: 0, moduleCount: 33, failedCount: 0 };
     expect(requiredAverage(s, 1.5)).toBeCloseTo(1.25);
   });
 

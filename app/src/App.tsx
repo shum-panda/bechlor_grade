@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FinancePage } from "./pages/FinancePage";
 import { GradesPage } from "./pages/GradesPage";
 import { loadState, saveState, type AppState } from "./storage";
 
@@ -6,7 +7,7 @@ type Tab = "grades" | "finance" | "organisation";
 
 const TABS: { id: Tab; label: string; ready: boolean }[] = [
   { id: "grades", label: "Noten", ready: true },
-  { id: "finance", label: "Finanzen", ready: false },
+  { id: "finance", label: "Finanzen", ready: true },
   { id: "organisation", label: "Organisation", ready: false },
 ];
 
@@ -34,7 +35,10 @@ export function App() {
           ))}
         </nav>
       </header>
-      <main>{tab === "grades" && <GradesPage state={state} setState={setState} />}</main>
+      <main>
+        {tab === "grades" && <GradesPage state={state} setState={setState} />}
+        {tab === "finance" && <FinancePage state={state} setState={setState} />}
+      </main>
       <footer className="footer">
         Alle Daten bleiben lokal in deinem Browser. Ohne Gewähr – maßgeblich ist die Studien- und Prüfungsordnung.
       </footer>

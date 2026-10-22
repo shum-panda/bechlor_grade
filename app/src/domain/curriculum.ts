@@ -2,7 +2,7 @@
 // Excel tool ("Beachlor AI Note 3.0.xlsx"); weight 0 = must be passed but does
 // not count towards the final grade.
 
-export type ModuleKind = "compulsory" | "elective" | "awe";
+export type ModuleKind = "compulsory" | "elective" | "specialised" | "awe";
 
 export interface ModuleDef {
   id: string;
@@ -44,6 +44,7 @@ export const HTW_AI_2021: Curriculum = {
   slotGroups: {
     "Elective Modules": "elective",
     "Wahlpflichtmodule": "elective",
+    "Specialised Elective Modules": "specialised",
     "Supplementary Modules": "awe",
     "Allgemeinwissenschaftliche Ergänzungsmodule": "awe",
   },
@@ -78,6 +79,7 @@ export const HTW_AI_2021: Curriculum = {
     m("wp3", "Wahlpflichtfach 3", 5, [], "elective"),
     m("wp4", "Wahlpflichtfach 4", 5, [], "elective"),
     m("wp5", "Wahlpflichtfach 5", 5, [], "elective"),
+    m("fwp1", "Fachübergreifendes Wahlmodul", 2, [], "specialised"),
     m("awe1", "AWE 1", 2, [], "awe"),
     m("awe2", "AWE 2", 2, [], "awe"),
   ],
